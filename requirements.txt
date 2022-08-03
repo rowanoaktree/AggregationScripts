@@ -7,3 +7,5 @@ json
 datetime
 collections 
 PyYAML
+torch
+torchvision

@@ -32,15 +32,7 @@ info = {"info": infolist}
 
 ###Images
 
-#Derive list of images
-for i in range(len(usfws)):
-  imglist = list(set(img['External ID'] for img in usfws))
 
-#Add unique IDs to each filename
-imgIDs = [{v: k for k, v in enumerate(
-   OrderedDict.fromkeys(imglist), 1)}
-      [n] for n in imglist]
-img = dict(zip(imgIDs, imglist))
   
 ###Annotations: import ID, Image ID, Category ID, bounding boxes (x,y, width, height). 
  
