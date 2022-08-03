@@ -14,7 +14,8 @@ import datetime
 from collections import OrderedDict 
 
 #Load data
-zooniverse = pd.read_csv('Data/zooniverse_snippet.csv')
+path = r"/Users/rowanconverse/Library/CloudStorage/OneDrive-UniversityofNewMexico/CV4Ecology/Prototyping/Data/Labels/zooniverse_snippet.csv"
+zooniverse = pd.read_csv(path)
 
 ###Info 
 whattimeisitrightnowdotcom = datetime.date.today()
@@ -31,15 +32,52 @@ info = {"info": infolist}
 
 ###Images
 
-for i in range(len(zooniverse)):
-  #info: define version, description. Optional: year, contributor, date created
-  version = 1.0
-  description = "This dataset includes annotations of UAS imagery collected x to y , 2018, at Bosque del Apache National Wildlife Refuge in New Mexico. Fifteen biologists from the US Fish and Wildlife Service identified waterfowl in thirteen benchmark images to the species level. Contact Rowan Converse (rowanconverse@unm.edu) with questions about this dataset. Please cite using a CC-By license with ASPIRE as the data repository."
-  #images: use code for image list. Need to create unique ID, file name. Can add other info
-  images = zooniverse.subject_ids
-  #categories: use code for species list (name), match with integer values (id) (NOT ZERO)
+#Derive list of images
+for i in range(len(usfws)):
+  imglist = list(set(img['External ID'] for img in usfws))
 
-  #Annotations: import ID, Image ID, Category ID, bounding boxes (x,y, width, height). 
+#Add unique IDs to each filename
+imgIDs = [{v: k for k, v in enumerate(
+   OrderedDict.fromkeys(imglist), 1)}
+      [n] for n in imglist]
+img = dict(zip(imgIDs, imglist))
+  
+###Annotations: import ID, Image ID, Category ID, bounding boxes (x,y, width, height). 
  
-  #also add labeler info
-  users = data.user_id
+#categories: use code for species list (name), match with integer values (id) (NOT ZERO)
+#Categories
+spplist = []
+for i in range(len(zooniverse)):
+  row = json.loads(zooniverse.annotations[i])
+  for j in range(len(row)):
+    annlist = row[j]['value']
+    for k in range(len(annlist)):
+      ann = annlist[k]
+      cur_species = ann["tool_label"] 
+      spplist.append(cur_species)
+spp = set(spplist)
+
+sppIDs = [{v: k for k, v in enumerate(
+   OrderedDict.fromkeys(spplist), 1)}
+      [n] for n in spp]
+cat = dict(zip(sppIDs, spp))
+categories = {"categories": cat}
+categories
+
+#also add labeler info
+userlist = list(set(zooniverse.user_id))
+userIDs = [{v: k for k, v in enumerate(
+   OrderedDict.fromkeys(userlist), 1)}
+      [n] for n in userlist]
+labelers = dict(zip(userIDs, userlist))
+
+
+###License
+lic_id = {"id": 1} 
+lic_name = {"name": "Creative Commons (CC)-BY"}
+lic_url = {"url": "https://creativecommons.org/about/cclicenses/"}
+licenselist = [lic_id, lic_name, lic_url]
+license = {"license": licenselist}
+
+#Finally, merge all the dictionaries into one JSON file and save it to the data directory
+zooniversecoco = json_dump(info, img, annos, license)

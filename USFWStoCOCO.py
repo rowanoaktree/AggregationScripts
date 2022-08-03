@@ -6,6 +6,7 @@
 ####
 import json
 from unicodedata import name
+from matplotlib.font_manager import json_dump
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -37,14 +38,14 @@ for i in range(len(usfws)):
   imglist = list(set(img['External ID'] for img in usfws))
 
 #Add unique IDs to each filename
-list_ids = [{v: k for k, v in enumerate(
+imgIDs = [{v: k for k, v in enumerate(
    OrderedDict.fromkeys(imglist), 1)}
       [n] for n in imglist]
-img = dict(zip(list_ids, imglist))
+img = dict(zip(imgIDs, imglist))
 
 #####Annotations: 
 #import ID, Image ID, Category ID, segmentation, area, bounding box (x,y, width, height), is crowd (0 or 1)
-
+annos = []
 
 #categories: use code for species list (name), match with integer values (id) (NOT ZERO)
 spplist = []
@@ -57,13 +58,16 @@ sppIDs = [{v: k for k, v in enumerate(
    OrderedDict.fromkeys(spplist), 1)}
       [n] for n in spplist]
 cat = dict(zip(sppIDs, spplist))
+categories = {"categories": cat}
+categories
 
 #also add labeler info
 userlist = list(set(user['Created By'] for user in usfws))
 userIDs = [{v: k for k, v in enumerate(
    OrderedDict.fromkeys(userlist), 1)}
       [n] for n in userlist]
-labelers = dict(zip(userIDs, userlist))
+lbldict = dict(zip(userIDs, userlist))
+labelers = {"labelers": lbldict}
 
 #License
 lic_id = {"id": 1} 
@@ -71,3 +75,6 @@ lic_name = {"name": "Creative Commons (CC)-BY"}
 lic_url = {"url": "https://creativecommons.org/about/cclicenses/"}
 licenselist = [lic_id, lic_name, lic_url]
 license = {"license": licenselist}
+
+#Finally, merge all the dictionaries into one JSON file and save it to the data directory
+usfwscoco = json_dump(info, img, annos, license)
