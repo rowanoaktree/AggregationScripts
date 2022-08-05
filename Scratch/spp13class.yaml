@@ -1,0 +1,11 @@
+# train and val data as 1) directory: path/images/, 2) file: path/images.txt, or 3) list: [path1/images/, path2/images/]
+train: 
+val: 
+
+# number of classes- fixed
+nc: 13
+
+# class names
+names: ['American Wigeon', 'Canadian Goose', 'Gadwall', 'Mallard', 'Northern Pintail',
+ 'Northern Shoveler', 'Other', 'Readhead', 'Ringneck', 'Ruddy',
+ 'Sandhill Crane', 'Snow Goose', 'Teal']

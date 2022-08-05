@@ -1,0 +1,7 @@
+labelbox_api_key.txt
+zooniverse_coco.json
+.DS_Store
+*.pem
+__pycache__
+.venv
+.vscode
