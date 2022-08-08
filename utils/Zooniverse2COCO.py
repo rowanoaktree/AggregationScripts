@@ -14,7 +14,7 @@ import datetime
 from collections import OrderedDict 
 
 #Load data
-path = r"/Users/rowanconverse/Library/CloudStorage/OneDrive-UniversityofNewMexico/CV4Ecology/Prototyping/Data/Labels/drones-for-ducks-classifications.csv"
+path = r"/Users/rowanconverse/Library/CloudStorage/OneDrive-UniversityofNewMexico/CV4Ecology/Prototyping/Data/Labels/drones-for-ducks-classifications-update.csv"
 zooniverse = pd.read_csv(path)
 
 ###Annotations: import ID, Image ID, Category ID, bounding boxes (x,y, width, height). 
@@ -23,13 +23,13 @@ annos = []
 categories = {}
 
 #This adds in labeler info-- omit for public release
-#labelers = {}
+labelers = {}
 for i in range(len(zooniverse)):
 #This adds in labeler info-- omit for public release
-#  labeler = zooniverse.user_name[i]
-#  if labeler not in labelers:
-#    labelers[labeler] = len(labelers) + 1
-#  labeler_id = labelers[labeler]
+  labeler = zooniverse.user_name[i]
+  if labeler not in labelers:
+    labelers[labeler] = len(labelers) + 1
+  labeler_id = labelers[labeler]
 
   image_id = None
   try:
@@ -92,5 +92,5 @@ for i in range(len(zooniverse)):
       }
       annos.append(annotation)
 
-with open("zooniverse_coco.json", "w") as outfile:
+with open("zooniverseupdate_coco.json", "w") as outfile:
     json.dump(annos, outfile)

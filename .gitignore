@@ -1,5 +1,12 @@
 labelbox_api_key.txt
+train.json
+val.json
+test.json
 zooniverse_coco.json
+zooniverseupdate_coco.json
+zooupdate_coco.json
+zooupdate1_coco.json
+snippet_coco.json
 .DS_Store
 *.pem
 __pycache__
