@@ -7,5 +7,7 @@ json
 datetime
 collections 
 PyYAML
+pybboxes
 torch
 torchvision
+tqdm
