@@ -1,19 +1,41 @@
 import pandas as pd
 import json
-from sklearn.model_selection import train_test_split
+import numpy as np
+import os
 path = r"/Users/rowanconverse/Library/CloudStorage/OneDrive-UniversityofNewMexico/CV4Ecology/Prototyping/Data/Labels/snippet_coco.json"
-cocozoo = json.loads(path)
+annotations = pd.read_csv(path)
 
-#Just a simple random split, 60% train, 20% validation, 20% test
+#Just a simple random split, 60% train, 20% validation, 20% test, making sure there is no image overlap between sets
 
-train, test = train_test_split(cocozoo, test_size=0.4)
-val, test = train_test_split(test, test_size=0.5)
+image_paths = annotations["image_path"].unique()
 
-with open("train.json", "w") as outfile:
-    json.dump(train, outfile)
+valid_paths = np.random.choice(image_paths, int(len(image_paths)*0.4) )
+valid_annotations = annotations.loc[annotations["image_path"].isin(valid_paths)]
+train_annotations = annotations.loc[~annotations["image_path"].isin(valid_paths)]
+test_paths = np.random.choice(valid_paths, int(len(valid_paths)*0.5))
+test_annotations = valid_annotations.loc[valid_annotations["image_path"].isin(test_paths)]
+valid_annotations = valid_annotations.loc[~valid_annotations["image_path"].isin(test_paths)]
 
-with open("val.json", "w") as outfile:
-    json.dump(val, outfile)
+#Checking that there is no overlap between sets
+trainfiles = set(train_annotations["image_path"])
+valfiles = set(valid_annotations["image_path"])
+testfiles = set(test_annotations["image_path"])
+print(set(testfiles).intersection(valfiles))
+print(set(trainfiles).intersection(valfiles))
+print(set(set(testfiles).intersection(trainfiles)))
 
-with open("test.json", "w") as outfile:
-    json.dump(test, outfile)
+#Make sure the total split numbers look good
+print(len(annotations))
+print(len(train_annotations))
+print(len(valid_annotations))
+print(len(test_annotations))
+
+#Write to your directory (needs to be with the right image sets-- adjust this in the final version)
+lbl_dir = "/Users/rowanconverse/Library/CloudStorage/OneDrive-UniversityofNewMexico/CV4Ecology/Prototyping/Data/Labels"
+annotations_file= os.path.join(lbl_dir,"train.csv")
+validation_file= os.path.join(lbl_dir,"valid.csv")
+test_file = os.path.join(lbl_dir, "test.csv")
+
+train_annotations.to_csv(annotations_file,index=False)
+valid_annotations.to_csv(validation_file,index=False)
+test_annotations.to_csv(test_file,index=False)

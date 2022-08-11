@@ -1,11 +1,11 @@
 from pybboxes import BoundingBox
 import pandas as pd
 
-f = r"/Users/rowanconverse/Library/CloudStorage/OneDrive-UniversityofNewMexico/CV4Ecology/Prototyping/Data/Labels/train/train.json"
+f = r"/Users/rowanconverse/Library/CloudStorage/OneDrive-UniversityofNewMexico/CV4Ecology/Prototyping/Data/Labels/coco/zooupdate1_coco.json"
 with open(f, encoding='utf-8') as inputfile:
     df = pd.read_json(inputfile)
 
-bboxes, filenames, cat_ids = df["bbox"].to_list(), df["filename"].to_list(), df["category_id"].to_list()
+bboxes, filenames, cats = df["bbox"].to_list(), df["filename"].to_list(), df["category"].to_list()
 vocboxes = []
 for ann in range(len(bboxes)):
     img = filenames[ann]
@@ -19,7 +19,7 @@ for ann in range(len(bboxes)):
         print("DEBUG")
         continue
     
-    label = cat_ids[ann]
+    label = cats[ann]
     vocanno = {
     "filename": img,
     "bbox": voc_bbox,
@@ -28,10 +28,10 @@ for ann in range(len(bboxes)):
     vocboxes.append(vocanno)
 
 #Save VOC boxes to csv
-labelpath = r"/Users/rowanconverse/Library/CloudStorage/OneDrive-UniversityofNewMexico/CV4Ecology/Prototyping/Data/Labels/train/train.csv"
+labelpath = r"/Users/rowanconverse/Library/CloudStorage/OneDrive-UniversityofNewMexico/CV4Ecology/Prototyping/Data/Labels/deepforest/zooupdate1.csv"
 
 with open(labelpath, 'w') as f:
-    f.write('image_path, xmin, ymin, xmax, ymax, label')
+    f.write('image_path, xmin, ymin, xmax, ymax, label\n')
     for item in vocboxes:
         f.write('{}, {}, {}\n'.format(
             item["filename"],
