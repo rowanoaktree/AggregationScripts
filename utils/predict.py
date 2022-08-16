@@ -7,7 +7,8 @@ from matplotlib import pyplot
 import numpy as np
 import pandas as pd
 
-model = ""
+dir = "modelstates"
+model = main.deepforest.load_from_checkpoint("{}/checkpoint.pl".format(dir))
 
 #Predict a single image
 #image_path = get_data("example.png")

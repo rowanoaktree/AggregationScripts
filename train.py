@@ -48,5 +48,6 @@ m.create_trainer(**{
 #Start training
 start_time = time.time()
 m.trainer.fit(m)
+m.trainer.save_checkpoint("{}/checkpoint.pl".format("modelstates"))
 assert m.num_classes == 3
 print(f"--- Training on GPU: {(time.time() - start_time):.2f} seconds ---")
