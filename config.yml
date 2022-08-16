@@ -3,7 +3,7 @@
 #cpu workers for data loaders
 #Dataloaders
 workers: 4
-gpus: 
+gpus: -1
 distributed_backend:
 batch_size: 5
 
@@ -13,7 +13,7 @@ score_thresh: 0.1
 
 train:
 
-    csv_file: /datadrive/Data/train_filter3.csv
+    csv_file: /datadrive/Data/train_filter4.csv
     root_dir: /datadrive/Data/train
     
     #Optomizer  initial learning rate
@@ -28,7 +28,7 @@ train:
     
 validation:
     #callback args
-    csv_file: /datadrive/Data/val_filter3.csv
+    csv_file: /datadrive/Data/val_filter4.csv
     root_dir: /datadrive/Data/val
     #Intersection over union evaluation
     iou_threshold: 0.4

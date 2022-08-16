@@ -38,7 +38,7 @@ m.model.head.regression_head.load_state_dict(deepforest_release_model.model.head
 # m.config["validation"]["val_accuracy_interval"] = 1
 
 #create a pytorch lighting trainer used to training 
-m.create_trainer({
+m.create_trainer(**{
     'num_sanity_val_steps': 0
 })
 
