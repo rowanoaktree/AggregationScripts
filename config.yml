@@ -5,7 +5,7 @@
 workers: 4
 gpus: 1
 distributed_backend:
-batch_size: 5
+batch_size: 1
 
 #Non-max supression of overlapping predictions
 nms_thresh: 0.05
@@ -13,7 +13,7 @@ score_thresh: 0.1
 
 train:
 
-    csv_file: /datadrive/Data/train_filter4.csv
+    csv_file: /datadrive/Data/train_subset.csv
     root_dir: /datadrive/Data/train
     
     #Optomizer  initial learning rate
