@@ -4,8 +4,8 @@ import shutil
 import pandas as pd
 import csv
 
-src = "/Users/rowanconverse/Library/CloudStorage/OneDrive-UniversityofNewMexico/CV4Ecology/Prototyping/Data/Imagery/SB597/tiles/"
-dst = "/Users/rowanconverse/Library/CloudStorage/OneDrive-UniversityofNewMexico/CV4Ecology/Prototyping/Data/Imagery/SB597/train/"
+src = "/datadrive/Data/train"
+dst = "/datadrive/Data/subset"
 train = pd.read_csv("/Users/rowanconverse/Library/CloudStorage/OneDrive-UniversityofNewMexico/CV4Ecology/Prototyping/Data/Labels/train.csv")
 
 img = train["image_path"]
