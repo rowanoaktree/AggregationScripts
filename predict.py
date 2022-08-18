@@ -3,9 +3,10 @@ from deepforest import main
 from deepforest import get_data
 from deepforest import evaluate, visualize
 import rasterio
-from matplotlib import pyplot
+from matplotlib import pyplot as plt
 import numpy as np
 import pandas as pd
+from utils.prec_rec_curve import precRecCurve
 
 dir = "modelstates"
 model = main.deepforest.load_from_checkpoint("{}/checkpoint.pl".format(dir))
@@ -39,6 +40,20 @@ visualize.plot_prediction_dataframe(predictions, root_dir, None, savedir=os.path
 
 #Evaluate
 result = evaluate.evaluate(predictions=predictions, ground_df=pd.read_csv(csv_file), root_dir=root_dir, savedir=os.path.join(save_dir, 'evaluation'))
+
+# precision-recall curves
+precRec = precRecCurve(result['results'], num_steps=50)
+plt.figure()
+for species in precRec:
+    plt.plot(precRec[species]['recall'], precRec[species]['precision'], title=species)
+    plt.draw()
+plt.title(f'{species}: precision-recall curve')
+plt.xlabel('recall')
+plt.ylabel('precision')
+plt.legend()
+plt.savefig(os.path.join(save_dir, 'prec_rec.png'))
+
+
 
 ap = result["box_precision"].mean()
 ar = result["box_recall"].mean()
