@@ -22,6 +22,7 @@ label_dict = {"Duck":0, "Goose":1, "Crane":2}
 #initial the model 
 m = main.deepforest(num_classes=3, label_dict=label_dict, config_file="config.yml")
 
+#for scratch training my own model, comment out these four lines and save the checkpoint into a different directory
 deepforest_release_model = main.deepforest()
 deepforest_release_model.use_bird_release()
 m.model.backbone.load_state_dict(deepforest_release_model.model.backbone.state_dict())
