@@ -62,18 +62,18 @@ def save_precrec_plot(precRec, destination):
     plt.savefig(destination)
 
 
-# if __name__ == '__main__':
-#     import os
-#     import pandas as pd
-#     import matplotlib.pyplot as plt
+if __name__ == '__main__':
+    import os
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    import torch
 
-#     save_dir = r"predictions/val"
-#     preds = pd.read_csv('temp.csv')
-#     precRec = precRecCurve(preds)
-#     save_precrec_plot(precRec, os.path.join(save_dir, 'prec_rec.png'))
+    save_dir = r"predictions/val"
+    preds = pd.read_csv('predictions/val/predictions.csv')
+    result = torch.load(open('predictions/val/results.pt', 'rb'))
+    precRec = precRecCurve(preds, result['results'])
+    save_precrec_plot(precRec, os.path.join(save_dir, 'prec_rec.png'))
 
-#     # class-agnostic
-#     preds['true_label'] = 'bird'
-#     preds.predicted_label[np.logical_not(pd.isnull(preds['predicted_label']))] = 'bird'
-#     precRec = precRecCurve(preds)
-#     save_precrec_plot(precRec, os.path.join(save_dir, 'prec_rec_speciesAgnostic.png'))
+    # class-agnostic
+    precRec = precRecCurve(preds, result['results'], agnostic_label='bird')
+    save_precrec_plot(precRec, os.path.join(save_dir, 'prec_rec_speciesAgnostic.png'))
