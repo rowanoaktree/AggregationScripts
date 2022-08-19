@@ -36,7 +36,7 @@ def quick_dirty_nms(df, iou_threshold=0.05):
 
 
 if __name__ == '__main__':
-    iou_threshold = 0.5     # smaller values lead to more aggressive NMS
+    iou_threshold = 0.1     # smaller values lead to more aggressive NMS
     csv_file = r"/datadrive/Data/val_filter4.csv" 
     df = pd.read_csv(csv_file)
 

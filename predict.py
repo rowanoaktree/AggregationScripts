@@ -24,11 +24,11 @@ import torch
 bbox_max_area = 10000
 
 #Predict a set of images
-csv_file = r"/datadrive/Data/val_filter4_nms_05.csv" #csv file of test annotations specifying the path 
+csv_file = r"/datadrive/Data/val_filter4_nms_01.csv" #csv file of test annotations specifying the path 
 root_dir = r"/datadrive/Data/val"
 save_dir = r"predictions/val"
 os.makedirs(os.path.join(save_dir, 'predictions'), exist_ok=True)
-os.makedirs(os.path.join(save_dir, 'evaluation_nms_05'), exist_ok=True)
+os.makedirs(os.path.join(save_dir, 'evaluation_nms_01'), exist_ok=True)
 
 pred_csv_dir = os.path.join(save_dir, 'predictions.csv')
 if os.path.exists(pred_csv_dir):
@@ -47,21 +47,27 @@ else:
     predictions.to_csv(pred_csv_dir)
 
 #Evaluate
-results_dir = os.path.join(save_dir, 'results_nms_05.pt')
+results_dir = os.path.join(save_dir, 'results_nms_01.pt')
 if os.path.exists(results_dir):
     print(f'Loading existing results from file "{results_dir}"...')
     result = torch.load(open(results_dir, 'rb'))
 else:
-    result = evaluate.evaluate(predictions=predictions, ground_df=pd.read_csv(csv_file), root_dir=root_dir, savedir=os.path.join(save_dir, 'evaluation_nms_05'))
+    df = pd.read_csv(csv_file)
+
+    # filter too large bboxes in ground truth
+    areas = (df['xmax'] - df['xmin']) * (df['ymax'] - df['ymin'])
+    df = df[areas <= bbox_max_area]
+
+    result = evaluate.evaluate(predictions=predictions, ground_df=df, root_dir=root_dir, savedir=os.path.join(save_dir, 'evaluation_nms_01'))
     torch.save(result, open(results_dir, 'wb'))
 
 # precision-recall curves
 precRec = precRecCurve(predictions, result['results'], num_steps=50)
-save_precrec_plot(precRec, os.path.join(save_dir, 'prec_rec_nms_05.png'))
+save_precrec_plot(precRec, os.path.join(save_dir, 'prec_rec_nms_01.png'))
 
 # class-agnostic
 precRec = precRecCurve(predictions, result['results'], num_steps=50, agnostic_label='bird')
-save_precrec_plot(precRec, os.path.join(save_dir, 'prec_rec_nms_05_classAgnostic.png'))
+save_precrec_plot(precRec, os.path.join(save_dir, 'prec_rec_nms_01_classAgnostic.png'))
 
 
 #ap = result["box_precision"].mean()
