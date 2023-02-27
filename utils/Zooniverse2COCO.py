@@ -14,7 +14,7 @@ import datetime
 from collections import OrderedDict 
 
 #Load data
-path = r"/Users/rowanconverse/Library/CloudStorage/OneDrive-UniversityofNewMexico/CV4Ecology/Prototyping/Data/Labels/originals/20221212_dronesforducks.csv"
+path = r"/Users/rowanconverse/Library/CloudStorage/OneDrive-UniversityofNewMexico/CV4Ecology/Prototyping/Data/Labels/originals/20230227_dgc.csv"
 zooniverse = pd.read_csv(path)
 
 ###Annotations: import ID, Image ID, Category ID, bounding boxes (x,y, width, height). 
@@ -87,10 +87,12 @@ for i in range(len(zooniverse)):
         'bbox': bbox,
         'area': area,
         'category_id': category_id,
+        'category': label,
         'image_id': image_id,
+        'filename': name,
         'labeler_id': labeler_id
       }
       annos.append(annotation)
 
-with open("20221212zooniverse_coco.json", "w") as outfile:
+with open("20220227_dgc.json", "w") as outfile:
     json.dump(annos, outfile)
