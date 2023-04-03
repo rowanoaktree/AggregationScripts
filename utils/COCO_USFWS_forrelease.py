@@ -1,10 +1,12 @@
 import json
 import pandas as pd
 import datetime
+import ast 
 
 # Load the data from the CSV file
 path = "/Users/rowanconverse/Library/CloudStorage/OneDrive-UniversityofNewMexico/CV4Ecology/Prototyping/Data/Labels/coco/labelbox.csv"
 df = pd.read_csv(path)
+df["bbox"] = df["bbox"].apply(ast.literal_eval)
 
 # Create dictionaries to store the mapping between labels and IDs
 categories = {}
@@ -27,7 +29,7 @@ for i in range(len(df)):
         }
 
     # Extract the bounding box information
-    bbox = df["bounding box"][i]
+    bbox = df["bbox"][i]
     xmin, ymin, width, height = bbox
 
     # Extract the labeler information
@@ -46,7 +48,7 @@ for i in range(len(df)):
 
     # Create the annotation dictionary
     annotation = {
-        "id": df["annotation ID"][i],
+        "id": df["annotation_ID"][i],
         "image_id": images[filename]["id"],
         "category_id": categories[category],
         "bbox": [xmin, ymin, width, height],
@@ -65,6 +67,12 @@ coco_output = {
     "categories": [{"id": categories[k], "name": k} for k in categories],
 }
 
+for anno in annos:
+    anno['id'] = int(anno['id'])
+    anno['image_id'] = int(anno['image_id'])
+    anno['category_id'] = int(anno['category_id'])
+    anno['bbox'] = [float(x) for x in anno['bbox']]
+
 # Save the output file
-with open(datetime.datetime.now().strftime('%Y%m%d') + '_dronesforducks.json', "w") as outfile:
+with open(datetime.datetime.now().strftime('%Y%m%d') + '_dronesforducks_raw_experts.json', "w") as outfile:
     json.dump(coco_output, outfile)

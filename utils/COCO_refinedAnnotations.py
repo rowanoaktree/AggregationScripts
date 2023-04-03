@@ -1,9 +1,11 @@
 import json
 import pandas as pd
+import ast
 
 # Load CSV data
-path = "/Users/rowanconverse/Library/CloudStorage/OneDrive-UniversityofNewMexico/Dissertation/1_Chapter/consensus/data/crowdsourced/20230307_zooniverseconsensuslabels_seagull.csv"
+path = "/Users/rowanconverse/Library/CloudStorage/OneDrive-UniversityofNewMexico/Dissertation/1_Chapter/consensus/data/crowdsourced/20230307_zooniverseconsensuslabels.csv"
 data = pd.read_csv(path)
+data["bbox"] = data["bbox"].apply(ast.literal_eval)
 
 # Initialize variables for COCO JSON format
 images = []
@@ -13,11 +15,11 @@ categories = []
 # Loop through data and create COCO format annotations and categories
 for index, row in data.iterrows():
     # Extract relevant data from CSV
-    annotation_id = row["annotation_ID"]
+    annotation_id = row["annotation_id"]
     image_name = row["filename"]
     category_name = row["category"]
     bbox = row["bbox"]
-    category_id = row["category_ID"]
+    category_id = row["category_id"]
     
     # Check if category already exists, if not add it
     if category_id not in [cat["id"] for cat in categories]:
